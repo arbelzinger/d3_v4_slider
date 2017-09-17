@@ -3,65 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>d3.js V4 Slider</title>
-    <script src="d3.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 <body>
 <div id="vis"></div>
 <input id="value" type="number">
 <script>
-    var width  = 80;
+    var width = 320;
     var value = 0;
     var color = "#51CB3F";
     var newX;
-    var selection = d3.select("#vis").append("svg").attr('width',100).attr("viewBox", '-10,0,'+110+',30');
+    var selection = d3.select("#vis").append("svg").attr('width', width + 30).attr("viewBox", '-10,0,' + (width + 30) + ',30');
     document.getElementById("value").value = value;
 
-   function dragEnded() {
-       newX = d3.event.x;
+    function dragEnded() {
+        newX = d3.event.x;
 
-       if (newX < 0)
-           newX = 0;
-       else if (newX > width)
-           newX = width;
+        if (newX < 0)
+            newX = 0;
+        else if (newX > width)
+            newX = width;
 
-       value = newX/ width;
-       valueCircle.attr("cx", newX);
-       valueLine.attr("x2",width * value);
-       emptyLine.attr("x1", width * value);
+        value = newX / width;
+        valueCircle.attr("cx", newX);
+        valueLine.attr("x2", width * value);
+        emptyLine.attr("x1", width * value);
 
-       d3.event.sourceEvent.stopPropagation();
-       document.getElementById("value").value = value
-   }
+        d3.event.sourceEvent.stopPropagation();
+        document.getElementById("value").value = value
+    }
 
-   //Line to represent the current value
-   var valueLine = selection.append("line")
-           .attr("x1", 0)
-           .attr("x2", width * value)
-           .attr("y1", 10)
-           .attr("y2", 10)
-           .style("stroke", color)
-           .style("stroke-linecap", "round")
-           .style("stroke-width", 6);
+    //Line to represent the current value
+    var valueLine = selection.append("line")
+            .attr("x1", 0)
+            .attr("x2", width * value)
+            .attr("y1", 10)
+            .attr("y2", 10)
+            .style("stroke", color)
+            .style("stroke-linecap", "round")
+            .style("stroke-width", 6);
 
-   //Line to show the remaining value
-   var emptyLine = selection.append("line")
-           .attr("x1", width * value)
-           .attr("x2", width)
-           .attr("y1", 10)
-           .attr("y2", 10)
-           .style("stroke", "#ECECEC")
-           .style("stroke-linecap", "round")
-           .style("stroke-width", 6);
+    //Line to show the remaining value
+    var emptyLine = selection.append("line")
+            .attr("x1", width * value)
+            .attr("x2", width)
+            .attr("y1", 10)
+            .attr("y2", 10)
+            .style("stroke", "#ECECEC")
+            .style("stroke-linecap", "round")
+            .style("stroke-width", 6);
 
-   //Draggable circle to represent the current value
-   var valueCircle = selection.append("circle")
-           .attr("cx", width * value)
-           .attr("cy", 10)
-           .attr("r", 6)
-           .style("stroke", "black")
-           .style("stroke-width",1)
-           .style("fill", "white")
-           .call(d3.drag().on("drag", dragEnded));
+    //Draggable circle to represent the current value
+    var valueCircle = selection.append("circle")
+            .attr("cx", width * value)
+            .attr("cy", 10)
+            .attr("r", 6)
+            .style("stroke", "black")
+            .style("stroke-width", 1)
+            .style("fill", "white")
+            .call(d3.drag().on("drag", dragEnded));
 </script>
 </body>
 </html>
