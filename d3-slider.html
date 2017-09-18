@@ -38,13 +38,13 @@
         else if (selectedValue > width)
             selectedValue = width;
 
-        value = selectedValue / width;
+        NormValue = selectedValue / width;
         valueCircle.attr("cx", selectedValue);
         valueLine.attr("x2", width * NormValue);
         emptyLine.attr("x1", width * NormValue);
 
         d3.event.sourceEvent.stopPropagation();
-        document.getElementById("value").value = (value*(maxValue-minValue)+minValue).toFixed(2)
+        document.getElementById("value").value = (NormValue*(maxValue-minValue)+minValue).toFixed(2)
     }
 
     //Line to represent the current value
