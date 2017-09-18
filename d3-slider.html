@@ -6,61 +6,75 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 <body>
+<span>Max Value: </span><span id="maxValue"></span>
 <div id="vis"></div>
 <input id="value" type="number">
 <script>
+
+    //Slider Properties
     var width = 320;
-    var value = 0;
+
+    var maxValue = 100;
+    var minValue = 10;
+    var initialValue = minValue;
     var color = "#51CB3F";
-    var newX;
-    var selection = d3.select("#vis").append("svg").attr('width', width + 30).attr("viewBox", '-10,0,' + (width + 30) + ',30');
-    document.getElementById("value").value = value;
+    var emptyColor = "#ECECEC";
+    var thumbColor = "white";
+    var lineWidth = 6;
+    var thumbSize = 6;
+    ////////////////////////////////////////
+
+    var NormValue = (initialValue-minValue)/(maxValue-minValue); // value normalized between 0-1
+    var selectedValue;
+    var svg = d3.select("#vis").append("svg").attr('width', width + 30).attr("viewBox", '-15,0,' + (width + 30) + ',40');
+    document.getElementById("maxValue").innerHTML = maxValue;
+    document.getElementById("value").value = initialValue;
 
     function dragEnded() {
-        newX = d3.event.x;
+        selectedValue = d3.event.x;
 
-        if (newX < 0)
-            newX = 0;
-        else if (newX > width)
-            newX = width;
+        if (selectedValue < 0)
+            selectedValue = 0;
+        else if (selectedValue > width)
+            selectedValue = width;
 
-        value = newX / width;
-        valueCircle.attr("cx", newX);
-        valueLine.attr("x2", width * value);
-        emptyLine.attr("x1", width * value);
+        value = selectedValue / width;
+        valueCircle.attr("cx", selectedValue);
+        valueLine.attr("x2", width * NormValue);
+        emptyLine.attr("x1", width * NormValue);
 
         d3.event.sourceEvent.stopPropagation();
-        document.getElementById("value").value = value
+        document.getElementById("value").value = (value*(maxValue-minValue)+minValue).toFixed(2)
     }
 
     //Line to represent the current value
-    var valueLine = selection.append("line")
+    var valueLine = svg.append("line")
             .attr("x1", 0)
-            .attr("x2", width * value)
-            .attr("y1", 10)
-            .attr("y2", 10)
+            .attr("x2", width * NormValue)
+            .attr("y1", 20)
+            .attr("y2", 20)
             .style("stroke", color)
             .style("stroke-linecap", "round")
-            .style("stroke-width", 6);
+            .style("stroke-width", lineWidth);
 
     //Line to show the remaining value
-    var emptyLine = selection.append("line")
-            .attr("x1", width * value)
+    var emptyLine = svg.append("line")
+            .attr("x1", width * NormValue)
             .attr("x2", width)
-            .attr("y1", 10)
-            .attr("y2", 10)
-            .style("stroke", "#ECECEC")
+            .attr("y1", 20)
+            .attr("y2", 20)
+            .style("stroke", emptyColor)
             .style("stroke-linecap", "round")
-            .style("stroke-width", 6);
+            .style("stroke-width", lineWidth);
 
     //Draggable circle to represent the current value
-    var valueCircle = selection.append("circle")
-            .attr("cx", width * value)
-            .attr("cy", 10)
-            .attr("r", 6)
+    var valueCircle = svg.append("circle")
+            .attr("cx", width * NormValue)
+            .attr("cy", 20)
+            .attr("r", thumbSize)
             .style("stroke", "black")
             .style("stroke-width", 1)
-            .style("fill", "white")
+            .style("fill", thumbColor)
             .call(d3.drag().on("drag", dragEnded));
 </script>
 </body>
